@@ -3,17 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/performance_landing.dart';
 
-// import 'performance_landing.dart';
-// // Stub imports for each benchmark screen
-// import 'static_list_screen.dart';
-// import 'animation_screen.dart';
-// import 'form_api_screen.dart';
-// import 'navigation_screen.dart';
-// import 'cpu_memory_screen.dart';
+import 'FloatingStatsOverlay.dart'; // correct import!
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
+
   await DigiaUIClient.init(
     accessKey: "680b92c50cbe7e3316c4dbc3",
     flavorInfo: Debug("main"),
@@ -27,8 +21,7 @@ Future<void> main() async {
 
   DUIFactory().initialize();
 
-  // Optional: style the status bar
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,
     statusBarIconBrightness: Brightness.light,
   ));
@@ -43,17 +36,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Digia vs Flutter Performance',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       theme: ThemeData.dark(),
+      builder: (context, child) {
+        return child!;
+      },
       initialRoute: '/',
       routes: {
         '/': (context) => const PerformanceLanding(),
-        // '/staticList': (context) => const StaticListScreen(),
-        // '/animationScreen': (context) => const AnimationScreen(),
-        // '/formApi': (context) => const FormApiScreen(),
-        // '/navigation': (context) => const NavigationScreen(),
-        // '/cpuMemory': (context) => const CpuMemoryScreen(),
       },
     );
+  }
+}
+
+/// A separate widget to manage FloatingStatsOverlay cleanly
+class _AppWithFloatingStats extends StatefulWidget {
+  final Widget child;
+  const _AppWithFloatingStats({required this.child});
+
+  @override
+  State<_AppWithFloatingStats> createState() => _AppWithFloatingStatsState();
+}
+
+class _AppWithFloatingStatsState extends State<_AppWithFloatingStats> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FloatingStatsOverlay.show(context); // ✅ Show after first frame
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

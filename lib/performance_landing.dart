@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_digia_comparison/scenario_selector/ScenarioSelectorScreen.dart';
+import 'FloatingStatsOverlay.dart';
 
-class PerformanceLanding extends StatelessWidget {
+class PerformanceLanding extends StatefulWidget {
   const PerformanceLanding({super.key});
 
+  @override
+  State<PerformanceLanding> createState() => _PerformanceLandingState();
+}
+
+class _PerformanceLandingState extends State<PerformanceLanding> {
   final List<_PerformanceItem> _items = const [
     _PerformanceItem(
       title: '🧩 Static ListView',
@@ -33,12 +39,21 @@ class PerformanceLanding extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FloatingStatsOverlay.show(context); // ✅ Safe here now
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Performance Benchmarking'),
         backgroundColor: Colors.black,
       ),
+      backgroundColor: Colors.black,
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _items.length,
@@ -49,24 +64,32 @@ class PerformanceLanding extends StatelessWidget {
             tileColor: Colors.grey.shade900,
             title: Text(
               item.title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-            subtitle: Text(item.description, style: const TextStyle(color: Colors.white70)),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            subtitle: Text(
+              item.description,
+              style: const TextStyle(color: Colors.white70),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => const ScenarioSelectorScreen(
-                  title: '🧩 Static ListView',
-                  description: 'Render 1000 items in a ListView to benchmark scroll & FPS.',
-                  digiaPageName: 'static_list_sdui', // Replace with actual Digia config page name
+                builder: (_) => ScenarioSelectorScreen(
+                  title: item.title,
+                  description: item.description,
+                  digiaPageName: item.routeName.replaceAll('/', ''),
                 ),
               ),
             ),
           );
         },
       ),
-      backgroundColor: Colors.black,
     );
   }
 }
