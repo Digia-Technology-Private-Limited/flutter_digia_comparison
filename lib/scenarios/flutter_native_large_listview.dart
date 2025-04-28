@@ -29,7 +29,7 @@ class FlutterLargeListView extends StatelessWidget {
             ),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Tapped ${items[index]}')),
+                SnackBar(content: Text('Tapped ${items[index]}'),showCloseIcon: true,duration:Duration(milliseconds: 300) ,),
               );
             },
           );

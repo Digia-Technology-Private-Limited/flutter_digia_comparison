@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_digia_comparison/scenario_selector/ScenarioSelectorScreen.dart';
 import 'FloatingStatsOverlay.dart';
+import '../main.dart'; // ✅ Import main.dart to access `startupStopwatch`
 
 class PerformanceLanding extends StatefulWidget {
   const PerformanceLanding({super.key});
@@ -42,7 +43,14 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FloatingStatsOverlay.show(context); // ✅ Safe here now
+      FloatingStatsOverlay.show(context);
+
+      Future.delayed(Duration(milliseconds: 50), () {
+        if (startupStopwatch.isRunning) {
+          startupStopwatch.stop();
+          debugPrint('🚀 App Cold Start Time: ${startupStopwatch.elapsedMilliseconds} ms');
+        }
+      });
     });
   }
 

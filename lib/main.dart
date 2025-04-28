@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/performance_landing.dart';
 
-import 'FloatingStatsOverlay.dart'; // correct import!
+final Stopwatch startupStopwatch = Stopwatch()..start(); // ✅ Start stopwatch early
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,37 +38,11 @@ class MyApp extends StatelessWidget {
       title: 'Digia vs Flutter Performance',
       debugShowCheckedModeBanner: true,
       theme: ThemeData.dark(),
-      builder: (context, child) {
-        return child!;
-      },
+      builder: (context, child) => child!,
       initialRoute: '/',
       routes: {
         '/': (context) => const PerformanceLanding(),
       },
     );
-  }
-}
-
-/// A separate widget to manage FloatingStatsOverlay cleanly
-class _AppWithFloatingStats extends StatefulWidget {
-  final Widget child;
-  const _AppWithFloatingStats({required this.child});
-
-  @override
-  State<_AppWithFloatingStats> createState() => _AppWithFloatingStatsState();
-}
-
-class _AppWithFloatingStatsState extends State<_AppWithFloatingStats> {
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FloatingStatsOverlay.show(context); // ✅ Show after first frame
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }
