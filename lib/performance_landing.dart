@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/scenario_selector/ScenarioSelectorScreen.dart';
+import 'package:flutter_digia_comparison/scenarios/FlutterAnimationHeavyScreen.dart';
+import 'package:flutter_digia_comparison/scenarios/FlutterHeavyLottieScreen.dart';
 import 'package:flutter_digia_comparison/scenarios/ListViewScenariosScreen.dart';
 import 'FloatingStatsOverlay.dart';
 import '../main.dart';
@@ -29,8 +31,8 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
       title: '🚀 Other Performance Scenarios',
       items: [
         _PerformanceItem(
-          title: '🎞️ Animation-Heavy Screen',
-          routeName: '/animationScreen',
+          title: '🎞️ Heavy Lottie Screen',
+          routeName: '/lottieScreen',
           description: 'Assess frame rate and jank in animation-heavy UI.',
         ),
         _PerformanceItem(
@@ -122,17 +124,56 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     onTap: () {
-                      if (item.isNavigationToListViewScenarios) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ListViewScenariosScreen(),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Coming soon!')),
-                        );
+                      switch (item.routeName) {
+                        case '/listViewScenarios':
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ListViewScenariosScreen(),
+                            ),
+                          );
+                          break;
+
+                        case '/lottieScreen':
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ScenarioSelectorScreen(
+                                title: item.title,
+                                description: item.description,
+                                flutterPage: FlutterHeavyLottieScreen(), // ✅ specific Flutter page
+                                digiaPageName: 'digia_heavy_lottie_listview',
+                              ),
+                            ),
+                          );
+                          break;
+
+                        case '/formApi':
+                        // Future: Navigate to Form + API screen here
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Form + API Screen Coming Soon!')),
+                          );
+                          break;
+
+                        case '/navigation':
+                        // Future: Navigate to Navigation + DeepLinking test screen here
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Navigation Test Coming Soon!')),
+                          );
+                          break;
+
+                        case '/cpuMemory':
+                        // Future: Navigate to CPU & Memory Benchmark screen here
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('CPU & Memory Benchmark Coming Soon!')),
+                          );
+                          break;
+
+                        default:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Coming soon!')),
+                          );
+                          break;
                       }
                     },
                   ),
