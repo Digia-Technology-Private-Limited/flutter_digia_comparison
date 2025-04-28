@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   digia_ui: ^0.3.8
   statsfl: ^2.1.0
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

@@ -1,18 +1,17 @@
 import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_digia_comparison/scenarios/flutter_native_large_listview.dart';
-
-
 
 class ScenarioSelectorScreen extends StatelessWidget {
   final String title;
   final String description;
+  final Widget flutterPage;
   final String digiaPageName;
 
   const ScenarioSelectorScreen({
     super.key,
     required this.title,
     required this.description,
+    required this.flutterPage,
     required this.digiaPageName,
   });
 
@@ -29,16 +28,17 @@ class ScenarioSelectorScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(description,
-                style: const TextStyle(fontSize: 16, color: Colors.white70)),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16, color: Colors.white70),
+            ),
             const SizedBox(height: 24),
             _buildButton(
               context,
               label: '🔷 Run in Flutter (Client-Driven)',
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => const FlutterLargeListView()),
+                MaterialPageRoute(builder: (_) => flutterPage),
               ),
             ),
             const SizedBox(height: 16),
@@ -47,7 +47,7 @@ class ScenarioSelectorScreen extends StatelessWidget {
               label: '🟦 Run in Digia (Server-Driven)',
               onTap: () => Navigator.push(
                 context,
-                DUIFactory().createPageRoute("digia_large_listview", {}),
+                DUIFactory().createPageRoute(digiaPageName, {}),
               ),
             ),
           ],
@@ -66,8 +66,10 @@ class ScenarioSelectorScreen extends StatelessWidget {
       ),
       onPressed: onTap,
       child: Center(
-        child: Text(label,
-            style: const TextStyle(color: Colors.white, fontSize: 16)),
+        child: Text(
+          label,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
       ),
     );
   }
