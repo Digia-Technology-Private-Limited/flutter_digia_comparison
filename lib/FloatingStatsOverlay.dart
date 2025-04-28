@@ -3,7 +3,7 @@ import 'package:statsfl/statsfl.dart';
 
 class FloatingStatsOverlay {
   static OverlayEntry? _overlayEntry;
-  static Offset _position = const Offset(20, 100); // Top left starting position
+  static Offset _position = const Offset(200, 700); // Top left starting position
 
   static void show(BuildContext context) {
     if (_overlayEntry != null) return; // already showing

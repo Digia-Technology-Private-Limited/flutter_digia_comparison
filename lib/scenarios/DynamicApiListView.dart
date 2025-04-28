@@ -28,7 +28,7 @@ class _DynamicApiListViewState extends State<DynamicApiListView> {
     });
 
     try {
-      final response = await http.get(Uri.parse('https://dummyjson.com/products?limit=50'));
+      final response = await http.get(Uri.parse('https://dummyjson.com/products?limit=500'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {

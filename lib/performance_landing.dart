@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/scenario_selector/ScenarioSelectorScreen.dart';
 import 'package:flutter_digia_comparison/scenarios/ListViewScenariosScreen.dart';
 import 'FloatingStatsOverlay.dart';
@@ -68,69 +69,79 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Performance Benchmarking'),
+    return WillPopScope(
+      onWillPop: () async {
+        return true; // Allow immediate back
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              SystemNavigator.pop(); // ✅ Immediately pop
+            },
+          ),
+          title: const Text('Performance Benchmarking'),
+          backgroundColor: Colors.black,
+        ),
         backgroundColor: Colors.black,
-      ),
-      backgroundColor: Colors.black,
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: _sections.length,
-        itemBuilder: (context, sectionIndex) {
-          final section = _sections[sectionIndex];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                section.title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+        body: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: _sections.length,
+          itemBuilder: (context, sectionIndex) {
+            final section = _sections[sectionIndex];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  section.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              ...section.items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  tileColor: Colors.grey.shade900,
-                  title: Text(
-                    item.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                const SizedBox(height: 8),
+                ...section.items.map((item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    tileColor: Colors.grey.shade900,
+                    title: Text(
+                      item.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
+                    subtitle: Text(
+                      item.description,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    onTap: () {
+                      if (item.isNavigationToListViewScenarios) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ListViewScenariosScreen(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Coming soon!')),
+                        );
+                      }
+                    },
                   ),
-                  subtitle: Text(
-                    item.description,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onTap: () {
-                    if (item.isNavigationToListViewScenarios) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ListViewScenariosScreen(),
-                        ),
-                      );
-                    } else {
-                      // You can later extend this for other specific navigations
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Coming soon!')),
-                      );
-                    }
-                  },
-                ),
-              )),
-              const SizedBox(height: 24),
-            ],
-          );
-        },
+                )),
+                const SizedBox(height: 24),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
