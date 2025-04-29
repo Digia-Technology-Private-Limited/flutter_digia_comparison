@@ -31,7 +31,7 @@ Future<void> main() async {
     DUIFactory().initialize();
 
     digiaInitStopwatch.stop();
-    print('⏳ Digia SDK Init Time: ${digiaInitStopwatch.elapsedMilliseconds} ms');
+    print('Digia Init Time: ${digiaInitStopwatch.elapsedMilliseconds} ms');
   }
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
