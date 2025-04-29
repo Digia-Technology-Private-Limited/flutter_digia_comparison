@@ -4,27 +4,35 @@ import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/performance_landing.dart';
 
 final Stopwatch startupStopwatch = Stopwatch();
+const String initMode = String.fromEnvironment('init_mode');
 
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   startupStopwatch.start();
-  print('⏳ Started Stopwatch: ${startupStopwatch.elapsedMilliseconds} ms');
+  print('Cold Start Stopwatch Started: ${startupStopwatch.elapsedMilliseconds} ms');
 
-  final Stopwatch digiaInitStopwatch = Stopwatch()..start();
-  await DigiaUIClient.init(
-    accessKey: "667301a6b6c3bd6fb255ec0d",
-    flavorInfo: Release(PrioritizeNetwork(500), 'assets/digia/appConfig.json', 'assets/digia/function.js'),
-    environment: Environment.development.name,
-    baseUrl: "https://app.digia.tech/api/v1",
-    networkConfiguration: NetworkConfiguration(
-      defaultHeaders: {},
-      timeout: 30,
-    ),
-  );
-  DUIFactory().initialize();
-  digiaInitStopwatch.stop();
-  print('⏳ Digia SDK Init Time: ${digiaInitStopwatch.elapsedMilliseconds} ms');
+  if (initMode != 'noDigia') {
+    final Stopwatch digiaInitStopwatch = Stopwatch();
+    digiaInitStopwatch..start();
+
+    await DigiaUIClient.init(
+      accessKey: "...",
+      flavorInfo: initMode == 'networkInit'
+          ? Release(PrioritizeNetwork(500), 'assets/digia/appConfig.json', 'assets/digia/function.js')
+          : Release(PrioritizeCache(), 'assets/digia/appConfig.json', 'assets/digia/function.js'),
+      environment: Environment.development.name,
+      baseUrl: "https://app.digia.tech/api/v1",
+      networkConfiguration: NetworkConfiguration(
+        defaultHeaders: {},
+        timeout: 30,
+      ),
+    );
+    DUIFactory().initialize();
+
+    digiaInitStopwatch.stop();
+    print('⏳ Digia SDK Init Time: ${digiaInitStopwatch.elapsedMilliseconds} ms');
+  }
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,

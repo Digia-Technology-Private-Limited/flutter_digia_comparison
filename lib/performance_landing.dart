@@ -60,22 +60,24 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FloatingStatsOverlay.show(context);
-      if (startupStopwatch.isRunning) {
-        startupStopwatch.stop();
-        final coldStartTime = startupStopwatch.elapsedMilliseconds;
-        print('🚀 Cold Start Time: ${coldStartTime} ms');
-         if (kDebugMode || kProfileMode) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('🚀 Cold Start: $coldStartTime ms'),
-              backgroundColor: Colors.blueAccent,
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (startupStopwatch.isRunning) {
+          startupStopwatch.stop();
+          final coldStartTime = startupStopwatch.elapsedMilliseconds;
+          print('Cold Start Time: $coldStartTime ms');
+
+          if (kDebugMode || kProfileMode) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('🚀 Cold Start: $coldStartTime ms'),
+                backgroundColor: Colors.blueAccent,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
         }
-      }
+      });
     });
   }
 
