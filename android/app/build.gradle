@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flutter_digia_comparison"
+    namespace = "com.digia.benchmark"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

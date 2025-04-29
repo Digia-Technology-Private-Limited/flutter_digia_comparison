@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/scenario_selector/ScenarioSelectorScreen.dart';
@@ -57,15 +58,24 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FloatingStatsOverlay.show(context);
-
-      Future.delayed(const Duration(milliseconds: 50), () {
-        if (startupStopwatch.isRunning) {
-          startupStopwatch.stop();
-          debugPrint('🚀 App Cold Start Time: ${startupStopwatch.elapsedMilliseconds} ms');
+      if (startupStopwatch.isRunning) {
+        startupStopwatch.stop();
+        final coldStartTime = startupStopwatch.elapsedMilliseconds;
+        print('🚀 Cold Start Time: ${coldStartTime} ms');
+         if (kDebugMode || kProfileMode) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('🚀 Cold Start: $coldStartTime ms'),
+              backgroundColor: Colors.blueAccent,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            ),
+          );
         }
-      });
+      }
     });
   }
 
@@ -141,7 +151,7 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
                               builder: (_) => ScenarioSelectorScreen(
                                 title: item.title,
                                 description: item.description,
-                                flutterPage: FlutterHeavyLottieScreen(), // ✅ specific Flutter page
+                                flutterPage: FlutterAnimationHeavyScreen(), // ✅ specific Flutter page
                                 digiaPageName: 'digia_heavy_lottie_listview',
                               ),
                             ),

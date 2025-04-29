@@ -1,4 +1,4 @@
-package com.example.flutter_digia_comparison
+package com.digia.benchmark
 
 import io.flutter.embedding.android.FlutterActivity
 

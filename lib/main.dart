@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_digia_comparison/performance_landing.dart';
 
-final Stopwatch startupStopwatch = Stopwatch()..start(); // ✅ Start stopwatch early
+final Stopwatch startupStopwatch = Stopwatch();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
+  WidgetsFlutterBinding.ensureInitialized();
+  startupStopwatch.start();
+  print('⏳ Started Stopwatch: ${startupStopwatch.elapsedMilliseconds} ms');
+
+  final Stopwatch digiaInitStopwatch = Stopwatch()..start();
   await DigiaUIClient.init(
-    accessKey: "680b92c50cbe7e3316c4dbc3",
-    flavorInfo: Debug("main"),
+    accessKey: "667301a6b6c3bd6fb255ec0d",
+    flavorInfo: Release(PrioritizeNetwork(500), 'assets/digia/appConfig.json', 'assets/digia/function.js'),
     environment: Environment.development.name,
     baseUrl: "https://app.digia.tech/api/v1",
     networkConfiguration: NetworkConfiguration(
@@ -18,8 +22,9 @@ Future<void> main() async {
       timeout: 30,
     ),
   );
-
   DUIFactory().initialize();
+  digiaInitStopwatch.stop();
+  print('⏳ Digia SDK Init Time: ${digiaInitStopwatch.elapsedMilliseconds} ms');
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,
