@@ -61,6 +61,8 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+
+        FloatingStatsOverlay.show(context);
         if (startupStopwatch.isRunning) {
           startupStopwatch.stop();
           final coldStartTime = startupStopwatch.elapsedMilliseconds;
@@ -153,7 +155,7 @@ class _PerformanceLandingState extends State<PerformanceLanding> {
                               builder: (_) => ScenarioSelectorScreen(
                                 title: item.title,
                                 description: item.description,
-                                flutterPage: FlutterAnimationHeavyScreen(), // ✅ specific Flutter page
+                                flutterPage: FlutterHeavyLottieScreen(), // ✅ specific Flutter page
                                 digiaPageName: 'digia_heavy_lottie_listview',
                               ),
                             ),
